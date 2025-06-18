@@ -84,44 +84,37 @@ const StockLedger: React.FC<ReturnType<typeof useInventoryData>> = ({
     });
   }, [stockLedgerData, filters]);
 
- const handleExportExcel = () => {
-  try {
-    const exportData = filteredData.map(entry => ({
-      'Part Number': entry.partNumber,
-      'Part Name': entry.partName,
-      'Running Number': entry.runningNumber,
-      'Sent to Supplier': entry.totalSentToSupplier,
-      'Sent to Company': entry.totalSentToCompany,
-      'Available': entry.availableQuantity,
-    }));
+  const handleExportExcel = () => {
+    try {
+      const exportData = filteredData.map(entry => ({
+        'Part Number': entry.partNumber,
+        'Part Name': entry.partName,
+        'Running Number': entry.runningNumber,
+        'DC Number': entry.dcNumber,
+        'Total Sent to Supplier': entry.totalSentToSupplier,
+        'Total Sent to Company': entry.totalSentToCompany,
+        'Available Quantity': entry.availableQuantity,
+        'Supplier': entry.supplierName,
+        'Company': entry.companyName || '-'
+      }));
 
-    exportToExcel(exportData, 'stock-ledger', 'Stock Ledger');
-    toast.success('Excel file exported successfully');
-  } catch (error) {
-    toast.error('Error exporting Excel file');
-    console.error('Excel Export Error:', error);
-  }
-};
+      exportToExcel(exportData, 'stock-ledger', 'Stock Ledger');
+      toast.success('Excel file exported successfully');
+    } catch (error) {
+      toast.error('Error exporting Excel file');
+      console.error(error);
+    }
+  };
 
-const handleExportPDF = () => {
-  try {
-    const exportData = filteredData.map(entry => ({
-      'Part Number': entry.partNumber,
-      'Part Name': entry.partName,
-      'Running Number': entry.runningNumber,
-      'Sent to Supplier': entry.totalSentToSupplier,
-      'Sent to Company': entry.totalSentToCompany,
-      'Available': entry.availableQuantity,
-    }));
-
-    exportToPDF(exportData, 'stock-ledger', 'Stock Ledger Report');
-    toast.success('PDF file exported successfully');
-  } catch (error) {
-    toast.error('Error exporting PDF file');
-    console.error('PDF Export Error:', error);
-  }
-};
-
+  const handleExportPDF = () => {
+    try {
+      exportToPDF(filteredData, 'stock-ledger', 'Stock Ledger Report');
+      toast.success('PDF file exported successfully');
+    } catch (error) {
+      toast.error('Error exporting PDF file');
+      console.error(error);
+    }
+  };
 
   const clearFilters = () => {
     setFilters({
@@ -228,22 +221,74 @@ const handleExportPDF = () => {
       </div>
 
       {/* Filters */}
-<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-  {/* <h3 className="text-lg font-medium text-gray-900 mb-4">Search Part</h3> */}
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">Part</label>
-      <input
-        type="text"
-        value={filters.part}
-        onChange={(e) => setFilters({ ...filters, part: e.target.value })}
-        placeholder="Search part..."
-        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-      />
-    </div>
-  </div>
-</div>
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-medium text-gray-900">Filters</h3>
+          <div className="flex space-x-2">
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+            >
+              <Filter className="h-4 w-4 mr-1" />
+              {showFilters ? 'Hide' : 'Show'} Filters
+            </button>
+            <button
+              onClick={clearFilters}
+              className="px-3 py-1 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+            >
+              Clear
+            </button>
+          </div>
+        </div>
 
+        {showFilters && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Supplier</label>
+              <input
+                type="text"
+                value={filters.supplier}
+                onChange={(e) => setFilters({...filters, supplier: e.target.value})}
+                placeholder="Search supplier..."
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
+              <input
+                type="text"
+                value={filters.company}
+                onChange={(e) => setFilters({...filters, company: e.target.value})}
+                placeholder="Search company..."
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Part</label>
+              <input
+                type="text"
+                value={filters.part}
+                onChange={(e) => setFilters({...filters, part: e.target.value})}
+                placeholder="Search part..."
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">DC Number</label>
+              <input
+                type="text"
+                value={filters.dcNumber}
+                onChange={(e) => setFilters({...filters, dcNumber: e.target.value})}
+                placeholder="Search DC number..."
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* Stock Ledger Table */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -260,9 +305,9 @@ const handleExportPDF = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Running Number
                 </th>
-                {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   DC Number
-                </th> */}
+                </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Sent to Supplier
                 </th>
@@ -272,12 +317,12 @@ const handleExportPDF = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Available
                 </th>
-                {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Supplier
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Company
-                </th> */}
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -292,9 +337,9 @@ const handleExportPDF = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {entry.runningNumber}
                   </td>
-                  {/* <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {entry.dcNumber}
-                  </td> */}
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     <span className="inline-flex px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
                       {entry.totalSentToSupplier}
@@ -314,12 +359,12 @@ const handleExportPDF = () => {
                       {entry.availableQuantity}
                     </span>
                   </td>
-                  {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {entry.supplierName}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {entry.companyName || '-'}
-                  </td> */}
+                  </td>
                 </tr>
               ))}
             </tbody>
