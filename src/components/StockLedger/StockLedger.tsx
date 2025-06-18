@@ -84,43 +84,43 @@ const StockLedger: React.FC<ReturnType<typeof useInventoryData>> = ({
     });
   }, [stockLedgerData, filters]);
 
- const handleExportExcel = () => {
-  try {
-    const exportData = filteredData.map(entry => ({
-      'Part Number': entry.partNumber,
-      'Part Name': entry.partName,
-      'Running Number': entry.runningNumber,
-      'Sent to Supplier': entry.totalSentToSupplier,
-      'Sent to Company': entry.totalSentToCompany,
-      'Available': entry.availableQuantity,
-    }));
+  const handleExportExcel = () => {
+    try {
+      const exportData = filteredData.map(entry => ({
+        'Part Number': entry.partNumber,
+        'Part Name': entry.partName,
+        'Running Number': entry.runningNumber,
+        'Sent to Supplier': entry.totalSentToSupplier,
+        'Sent to Company': entry.totalSentToCompany,
+        'Available': entry.availableQuantity,
+      }));
 
-    exportToExcel(exportData, 'stock-ledger', 'Stock Ledger');
-    toast.success('Excel file exported successfully');
-  } catch (error) {
-    toast.error('Error exporting Excel file');
-    console.error('Excel Export Error:', error);
-  }
-};
+      exportToExcel(exportData, 'stock-ledger', 'Stock Ledger');
+      toast.success('Excel file exported successfully');
+    } catch (error) {
+      toast.error('Error exporting Excel file');
+      console.error('Excel Export Error:', error);
+    }
+  };
 
-const handleExportPDF = () => {
-  try {
-    const exportData = filteredData.map(entry => ({
-      'Part Number': entry.partNumber,
-      'Part Name': entry.partName,
-      'Running Number': entry.runningNumber,
-      'Sent to Supplier': entry.totalSentToSupplier,
-      'Sent to Company': entry.totalSentToCompany,
-      'Available': entry.availableQuantity,
-    }));
+  const handleExportPDF = () => {
+    try {
+      const exportData = filteredData.map(entry => ({
+        'Part Number': entry.partNumber,
+        'Part Name': entry.partName,
+        'Running Number': entry.runningNumber,
+        'Sent to Supplier': entry.totalSentToSupplier,
+        'Sent to Company': entry.totalSentToCompany,
+        'Available': entry.availableQuantity,
+      }));
 
-    exportToPDF(exportData, 'stock-ledger', 'Stock Ledger Report');
-    toast.success('PDF file exported successfully');
-  } catch (error) {
-    toast.error('Error exporting PDF file');
-    console.error('PDF Export Error:', error);
-  }
-};
+      exportToPDF(exportData, 'stock-ledger', 'Stock Ledger Report');
+      toast.success('PDF file exported successfully');
+    } catch (error) {
+      toast.error('Error exporting PDF file');
+      console.error('PDF Export Error:', error);
+    }
+  };
 
 
   const clearFilters = () => {
@@ -228,21 +228,21 @@ const handleExportPDF = () => {
       </div>
 
       {/* Filters */}
-<div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-  {/* <h3 className="text-lg font-medium text-gray-900 mb-4">Search Part</h3> */}
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">Part</label>
-      <input
-        type="text"
-        value={filters.part}
-        onChange={(e) => setFilters({ ...filters, part: e.target.value })}
-        placeholder="Search part..."
-        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-      />
-    </div>
-  </div>
-</div>
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        {/* <h3 className="text-lg font-medium text-gray-900 mb-4">Search Part</h3> */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Part</label>
+            <input
+              type="text"
+              value={filters.part}
+              onChange={(e) => setFilters({ ...filters, part: e.target.value })}
+              placeholder="Search part..."
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+        </div>
+      </div>
 
 
       {/* Stock Ledger Table */}
@@ -306,11 +306,10 @@ const handleExportPDF = () => {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                      entry.availableQuantity > 0 
-                        ? 'bg-purple-100 text-purple-800' 
+                    <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${entry.availableQuantity > 0
+                        ? 'bg-purple-100 text-purple-800'
                         : 'bg-gray-100 text-gray-800'
-                    }`}>
+                      }`}>
                       {entry.availableQuantity}
                     </span>
                   </td>
